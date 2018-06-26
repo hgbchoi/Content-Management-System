@@ -1,16 +1,20 @@
-<?php include_once 'includes/db.php' ?>
-<?php include 'includes/widgets.php' ?>
-<?php include 'includes/display.php' ?>
+<?php include_once 'includes/db.php'?>
+<?php include 'includes/widgets.php'?>
+<?php include 'includes/display.php'?>
+
 <?php
 dbManager::initialize('localhost', 'root','', 'cms');
-widgets::setHeader();
 dbManager::dbConnect();
-$posts = dbManager::fetchPosts();
+widgets::setHeader();
+if (dbManager::checkifSet_POST('submit_search')){
+    $tag = $_POST['search'];
+    $results = dbManager::fetchByUserSearch($tag);
+}
 ?>
 
 <body>
 
-  <?php widgets::setNavBar(); ?>
+    <?php widgets::setNavBar(); ?>
     <!-- Page Content -->
     <div class="container">
 
@@ -22,11 +26,13 @@ $posts = dbManager::fetchPosts();
               <h1 class="page-header">
                   Page Heading
                   <small>Secondary Text</small>
+
               </h1>
 
-                <?php
-                display::displayPosts(dbManager::fetchPosts());
+                <?php if (isset($results))
+                      display::displayPosts($results)
                 ?>
+
 
             </div>
 
